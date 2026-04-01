@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="admin-page">
+
+<h2>Edit Product</h2>
+
+<form method="POST" class="admin-form">
+    <input name="name" value="{{ product.name }}" required>
+    <input name="price" type="number" value="{{ product.price }}" required>
+    <input name="file" value="{{ product.file }}" required>
+    <button>Update</button>
+</form>
+
+</section>
+
+{% endblock %}

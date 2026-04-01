@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="product-detail">
+
+    <div class="product-box">
+
+        <!-- 🔥 MEDIA -->
+        <div class="media-container">
+
+            {% if p[4] %}
+
+                <!-- VIDEO -->
+                <video id="mainVideo" controls>
+                    <source src="{{ url_for('static', filename='images/' ~ p[4]) }}" type="video/mp4">
+                </video>
+
+            {% elif p[3] %}
+
+                <!-- IMAGE -->
+                <img id="mainImage" src="{{ url_for('static', filename='images/' ~ p[3]) }}">
+
+            {% else %}
+
+                <img src="{{ url_for('static', filename='images/default.jpg') }}">
+
+            {% endif %}
+
+        </div>
+
+        <!-- 🔥 DETAILS -->
+        <div class="product-info">
+            <h2>{{ p[1] }}</h2>
+            <p class="price">₹{{ p[2] }}</p>
+
+            <a href="/add/{{ p[0] }}">
+                <button>Add to Cart</button>
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- 🔥 ZOOM SCRIPT (IMAGE ONLY) -->
+<script>
+const img = document.getElementById("mainImage");
+
+if(img){
+    img.addEventListener("mousemove", function(e){
+        let rect = img.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        img.style.transformOrigin = (x/rect.width*100) + "% " + (y/rect.height*100) + "%";
+        img.style.transform = "scale(2)";
+    });
+
+    img.addEventListener("mouseleave", function(){
+        img.style.transform = "scale(1)";
+    });
+}
+</script>
+
+{% endblock %}

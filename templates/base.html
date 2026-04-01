@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jewelz</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<div class="navbar">
+    <div class="logo">Jewelz | सुवर्ण</div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/cart">Cart</a>
+        <a href="/admin">Admin</a>
+    </nav>
+</div>
+
+<!-- 🔥 PAGE CONTENT -->
+{% block content %}{% endblock %}
+
+<!-- 🔥 FOOTER (NEW - SAFE) -->
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <!-- 📍 ADDRESS -->
+        <div class="footer-box">
+            <h3>Our Store</h3>
+            <p>
+                Anushka Joshi Honey Photo Studio <br>
+                Near Old Libaas Collection <br>
+                Nanewadi, Dhar (MP) 454001
+            </p>
+        </div>
+
+        <!-- 📂 MENU -->
+        <div class="footer-box">
+            <h3>Main Menu</h3>
+            <a href="/">Home</a>
+            <a href="/">All Products</a>
+            <a href="/cart">Cart</a>
+        </div>
+
+        <!-- 📜 POLICY -->
+        <div class="footer-box">
+            <h3>Policy</h3>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Refund Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- 🔥 WHATSAPP BUTTON -->
+<a href="/whatsapp" class="whatsapp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+</body>
+</html>

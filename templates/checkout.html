@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="checkout">
+
+    <h2>Scan & Pay</h2>
+
+    <div class="payment-box">
+        <img src="{{ url_for('static', filename='images/barcode.png') }}" width="250">
+        
+        <p>Scan using PhonePe / Google Pay / Paytm</p>
+
+        <a href="/whatsapp">
+            <button class="place-order">Confirm Order</button>
+        </a>
+    </div>
+
+</section>
+
+{% endblock %}

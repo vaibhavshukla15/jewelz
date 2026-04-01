@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>Jewelz | सुवर्ण</h1>
+        <p>Luxury Jewellery Collection</p>
+    </div>
+</section>
+
+<section class="products">
+    <h2>Our Collection</h2>
+
+    <div class="grid">
+
+        {% for p in products %}
+        <div class="card">
+
+            <div class="media-box">
+                <a href="/product/{{ p[0] }}">
+
+                    {% if p[4] %}   <!-- VIDEO COLUMN -->
+
+                        <video muted autoplay loop playsinline>
+                            <source src="{{ url_for('static', filename='images/' ~ p[4]) }}">
+                        </video>
+
+                    {% elif p[3] %} <!-- IMAGE COLUMN -->
+
+                        <img src="{{ url_for('static', filename='images/' ~ p[3]) }}">
+
+                    {% else %}
+
+                        <img src="{{ url_for('static', filename='images/default.jpg') }}">
+
+                    {% endif %}
+
+                    <div class="overlay">
+                        <span>View Product</span>
+                    </div>
+
+                </a>
+            </div>
+
+            <div class="card-info">
+                <h3>{{ p[1] }}</h3>
+                <p>₹{{ p[2] }}</p>
+
+                <a href="/add/{{ p[0] }}">
+                    <button>Add to Cart</button>
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</section>
+
+<section class="insta">
+    <h2>Follow Us for More ✨</h2>
+    <p>
+        <a href="https://instagram.com/official_jewelz_" target="_blank">
+            @official_jewelz_
+        </a>
+    </p>
+</section>
+
+{% endblock %}

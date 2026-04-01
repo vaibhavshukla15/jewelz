@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="cart">
+
+    <h2>Your Cart</h2>
+
+    {% for item in items %}
+    <div class="cart-box">
+
+        <!-- IMAGE / VIDEO -->
+        {% if item.file %}
+            {% if '.mp4' in item.file %}
+                <video class="cart-media" controls>
+                    <source src="{{ url_for('static', filename='images/' ~ item.file) }}">
+                </video>
+            {% else %}
+                <img class="cart-media" src="{{ url_for('static', filename='images/' ~ item.file) }}">
+            {% endif %}
+        {% else %}
+            <img class="cart-media" src="{{ url_for('static', filename='images/default.jpg') }}">
+        {% endif %}
+
+        <div>
+            <h3>{{ item.name }}</h3>
+            <p>₹{{ item.price }}</p>
+
+            <!-- 🔥 QUANTITY CONTROLS -->
+            <div class="qty">
+                <a href="/dec/{{ item.id }}">-</a>
+                <span>{{ item.qty }}</span>
+                <a href="/inc/{{ item.id }}">+</a>
+            </div>
+
+            <p>Subtotal: ₹{{ item.subtotal }}</p>
+
+            <a href="/remove/{{ item.id }}">
+                <button>Remove</button>
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <h2>Total: ₹{{ total }}</h2>
+
+    <a href="/checkout">
+        <button class="checkout-btn">Checkout</button>
+    </a>
+
+</section>
+
+{% endblock %}

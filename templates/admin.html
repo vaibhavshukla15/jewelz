@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="admin-page">
+
+<h2>Admin Panel</h2>
+
+<form method="POST" class="admin-form">
+
+    <input name="name" placeholder="Product Name" required>
+    <input name="price" placeholder="Price" required>
+
+    <!-- 🔥 IMAGE FIELD -->
+    <input name="image" placeholder="image.jpg">
+
+    <!-- 🔥 VIDEO FIELD -->
+    <input name="file" placeholder="video.mp4">
+
+    <button>Add Product</button>
+
+</form>
+
+<div class="admin-list">
+
+{% for p in products %}
+<div class="admin-item">
+
+    {% if p[3] %}
+        {% if '.mp4' in p[3] %}
+            <video class="admin-media" autoplay muted loop>
+                <source src="{{ url_for('static', filename='images/' + p[3]) }}">
+            </video>
+        {% else %}
+            <img class="admin-media" src="{{ url_for('static', filename='images/' + p[3]) }}">
+        {% endif %}
+    {% else %}
+        <img class="admin-media" src="{{ url_for('static', filename='images/default.jpg') }}">
+    {% endif %}
+
+    <h3>{{ p[1] }}</h3>
+    <p>₹{{ p[2] }}</p>
+
+    <a href="/edit/{{ p[0] }}"><button>Edit</button></a>
+    <a href="/delete/{{ p[0] }}"><button class="delete-btn">Delete</button></a>
+
+</div>
+{% endfor %}
+
+</div>
+
+</section>
+
+{% endblock %}
