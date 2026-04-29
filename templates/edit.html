@@ -1,15 +1,42 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 
 <section class="admin-page">
 
 <h2>Edit Product</h2>
 
-<form method="POST" class="admin-form">
-    <input name="name" value="{{ product.name }}" required>
-    <input name="price" type="number" value="{{ product.price }}" required>
-    <input name="file" value="{{ product.file }}" required>
-    <button>Update</button>
+<form method="POST" enctype="multipart/form-data" class="admin-form">
+
+    <!-- Product Name -->
+    <input type="text"
+           name="name"
+           value="{{ product[1] }}"
+           required>
+
+    <!-- Product Price -->
+    <input type="number"
+           name="price"
+           value="{{ product[2] }}"
+           required>
+
+    <!-- Upload New File -->
+    <input type="file"
+           name="file"
+           accept="image/*,video/mp4">
+
+    <!-- Bestseller Checkbox -->
+    <label style="color:gold; font-weight:bold; margin:10px 0; display:block;">
+        <input type="checkbox"
+               name="bestseller"
+               {% if product[5] == 1 %}checked{% endif %}>
+        🔥 Bestseller
+    </label>
+
+    <!-- Submit -->
+    <button type="submit">
+        Update Product
+    </button>
+
 </form>
 
 </section>

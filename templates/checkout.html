@@ -3,18 +3,82 @@
 
 <section class="checkout">
 
-    <h2>Scan & Pay</h2>
+    <h2>Checkout</h2>
 
-    <div class="payment-box">
-        <img src="{{ url_for('static', filename='images/barcode.png') }}" width="250">
-        
-        <p>Scan using PhonePe / Google Pay / Paytm</p>
+    <div class="checkout-box">
 
-        <a href="/whatsapp">
-            <button class="place-order">Confirm Order</button>
-        </a>
+        <!-- LEFT -->
+        <div class="checkout-form">
+
+            <h3>Shipping Address</h3>
+
+            <form action="/place_order" method="POST">
+
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="text" name="phone" placeholder="Phone Number" required>
+
+                <input type="text" name="address" placeholder="Full Address" required>
+
+                <!-- PINCODE -->
+                <input type="text" id="pincode" name="pincode" placeholder="Pincode" required>
+
+                <!-- AUTO CITY -->
+                <input type="text" id="city" name="city" placeholder="City" required readonly>
+
+                <!-- PAYMENT -->
+                <h3>Payment Method</h3>
+
+                <div class="payment-option">
+                    <input type="radio" name="payment" value="upi" checked>
+                    <label>UPI / QR Payment</label>
+                </div>
+
+                <!-- QR -->
+                <div class="qr">
+                    <img src="{{ url_for('static', filename='images/barcode.png') }}">
+                    <p>Scan & Pay</p>
+                </div>
+
+                <button type="submit" class="pay-btn">Place Order</button>
+
+            </form>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="order-summary">
+
+            <h3>Your Order</h3>
+
+            {% for item in items %}
+                <p>{{ item.name }} x {{ item.qty }} = ₹{{ item.subtotal }}</p>
+            {% endfor %}
+
+            <hr>
+
+            <h3>Total: ₹{{ total }}</h3>
+
+        </div>
+
     </div>
 
 </section>
+
+<!-- 🔥 PINCODE AUTO FETCH SCRIPT -->
+<script>
+document.getElementById("pincode").addEventListener("blur", function() {
+    let pin = this.value;
+
+    fetch("https://api.postalpincode.in/pincode/" + pin)
+    .then(res => res.json())
+    .then(data => {
+        if (data[0].Status === "Success") {
+            document.getElementById("city").value = data[0].PostOffice[0].District;
+        } else {
+            alert("Invalid Pincode");
+        }
+    });
+});
+</script>
 
 {% endblock %}

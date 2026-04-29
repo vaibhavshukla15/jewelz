@@ -1,65 +1,164 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 
-<section class="product-detail">
+<div class="product-detail">
 
-    <div class="product-box">
+    <!-- LEFT SIDE -->
+    <div class="left-side">
 
-        <!-- 🔥 MEDIA -->
-        <div class="media-container">
+        {% set media = p[4] if p[4] else p[3] %}
 
-            {% if p[4] %}
+        <!-- MAIN IMAGE -->
+        <div class="img-zoom-box" id="zoom-box">
 
-                <!-- VIDEO -->
-                <video id="mainVideo" controls>
-                    <source src="{{ url_for('static', filename='images/' ~ p[4]) }}" type="video/mp4">
+            {% if media and '.mp4' in media %}
+                <video class="main-img" controls>
+                    <source src="{{ url_for('static', filename='images/' ~ media) }}">
                 </video>
-
-            {% elif p[3] %}
-
-                <!-- IMAGE -->
-                <img id="mainImage" src="{{ url_for('static', filename='images/' ~ p[3]) }}">
-
             {% else %}
-
-                <img src="{{ url_for('static', filename='images/default.jpg') }}">
-
+                <img id="zoom-img"
+                     src="{{ url_for('static', filename='images/' ~ media) }}"
+                     onclick="openGallery(this.src)">
             {% endif %}
 
         </div>
 
-        <!-- 🔥 DETAILS -->
-        <div class="product-info">
-            <h2>{{ p[1] }}</h2>
-            <p class="price">₹{{ p[2] }}</p>
+        <!-- 🔥 THUMBNAILS -->
+        <div class="thumbnails">
 
-            <a href="/add/{{ p[0] }}">
-                <button>Add to Cart</button>
-            </a>
+            {% if p[3] %}
+                <img src="{{ url_for('static', filename='images/' ~ p[3]) }}"
+                     onclick="changeImage(this.src)">
+            {% endif %}
+
+            {% if p[4] and '.mp4' not in p[4] %}
+                <img src="{{ url_for('static', filename='images/' ~ p[4]) }}"
+                     onclick="changeImage(this.src)">
+            {% endif %}
+
         </div>
 
     </div>
 
-</section>
+    <!-- 🔥 RIGHT SIDE ZOOM PREVIEW -->
+    <div class="zoom-preview" id="zoom-preview"></div>
 
-<!-- 🔥 ZOOM SCRIPT (IMAGE ONLY) -->
+    <!-- DETAILS -->
+    <div class="product-info">
+        <h1>{{ p[1] }}</h1>
+        <h2>₹{{ p[2] }}</h2>
+
+        <p>⭐⭐⭐⭐☆ (124 reviews)</p>
+
+        <a href="/add/{{ p[0] }}">
+            <button>Add to Cart</button>
+        </a>
+
+        <a href="/whatsapp">
+            <button>Order on WhatsApp</button>
+        </a>
+    </div>
+
+</div>
+
+<!-- 🔥 GALLERY POPUP -->
+<div id="gallery" class="gallery">
+    <span onclick="closeGallery()">×</span>
+    <img id="gallery-img">
+</div>
+
+<!-- 🔥 SCRIPT -->
 <script>
-const img = document.getElementById("mainImage");
 
-if(img){
-    img.addEventListener("mousemove", function(e){
-        let rect = img.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
-
-        img.style.transformOrigin = (x/rect.width*100) + "% " + (y/rect.height*100) + "%";
-        img.style.transform = "scale(2)";
-    });
-
-    img.addEventListener("mouseleave", function(){
-        img.style.transform = "scale(1)";
-    });
+// CHANGE IMAGE
+function changeImage(src){
+    document.getElementById("zoom-img").src = src;
 }
+
+// OPEN GALLERY
+function openGallery(src){
+    document.getElementById("gallery").style.display = "flex";
+    document.getElementById("gallery-img").src = src;
+}
+
+// CLOSE GALLERY
+function closeGallery(){
+    document.getElementById("gallery").style.display = "none";
+}
+
+// 🔥 ZOOM LOGIC
+const zoomBox = document.getElementById("zoom-box");
+const zoomImg = document.getElementById("zoom-img");
+const preview = document.getElementById("zoom-preview");
+
+if(zoomBox && zoomImg){
+
+    zoomBox.addEventListener("mousemove", function(e){
+
+        let rect = zoomBox.getBoundingClientRect();
+
+        let x = (e.clientX - rect.left) / rect.width * 100;
+        let y = (e.clientY - rect.top) / rect.height * 100;
+
+        zoomImg.style.transformOrigin = x + "% " + y + "%";
+        zoomImg.style.transform = "scale(2)";
+
+        preview.style.backgroundImage = `url(${zoomImg.src})`;
+        preview.style.backgroundPosition = x + "% " + y + "%";
+        preview.style.display = "block";
+    });
+
+    zoomBox.addEventListener("mouseleave", function(){
+        zoomImg.style.transform = "scale(1)";
+        preview.style.display = "none";
+    });
+
+}
+
 </script>
+<!-- ⭐ REVIEW SECTION -->
+
+<div class="reviews-section">
+
+    <h3>Customer Reviews ⭐</h3>
+
+    <!-- SHOW REVIEWS -->
+    {% if reviews %}
+        {% for r in reviews %}
+            <div class="review-box">
+                <strong>{{ r[2] }}</strong>
+                <p>
+                    {% for i in range(r[3]|int) %}
+                        ⭐
+                    {% endfor %}
+                </p>
+                <p>{{ r[4] }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet 😔</p>
+    {% endif %}
+
+    <!-- ADD REVIEW FORM -->
+    <h4>Add Review</h4>
+
+    <form method="POST" action="/add_review/{{ p[0] }}">
+        <input name="name" placeholder="Your Name" required>
+
+        <select name="rating" required>
+            <option value="">Rating</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+
+        <textarea name="comment" placeholder="Write your review" required></textarea>
+
+        <button type="submit">Submit Review</button>
+    </form>
+
+</div>
 
 {% endblock %}

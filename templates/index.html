@@ -1,64 +1,148 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<!-- 🔥 HERO -->
 <section class="hero">
     <div class="hero-text">
         <h1>Jewelz | सुवर्ण</h1>
         <p>Luxury Jewellery Collection</p>
+
+        <a href="#products">
+            <button class="shop-btn">Shop Now</button>
+        </a>
     </div>
 </section>
 
+<!-- 🔍 SEARCH BAR -->
+    <!-- 🔍 LIVE SEARCH -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search jewellery..." onkeyup="liveSearch()">
+    </div>
+
+<!-- 🔥 TRUST STRIP -->
+<section class="trust-strip">
+    <div class="trust-item">
+        <h2>💎 1000+</h2>
+        <p>Happy Customers</p>
+    </div>
+
+    <div class="trust-item">
+        <h2>🚚 Fast</h2>
+        <p>Delivery</p>
+    </div>
+
+    <div class="trust-item">
+        <h2>🔒 Secure</h2>
+        <p>Payment</p>
+    </div>
+
+    <div class="trust-item">
+        <h2>✨ Premium</h2>
+        <p>Quality</p>
+    </div>
+</section>
+
+<!-- 🔥 BESTSELLERS -->
 <section class="products">
-    <h2>Our Collection</h2>
+    <h2 class="section-title">🔥 Bestsellers</h2>
 
     <div class="grid">
 
         {% for p in products %}
-        <div class="card">
+            {% set media = p[4] if p[4] else p[3] %}
 
-            <div class="media-box">
-                <a href="/product/{{ p[0] }}">
+            {% if p['bestseller'] == 1 %}
+            <div class="card">
 
-                    {% if p[4] %}   <!-- VIDEO COLUMN -->
+                <span class="badge bestseller-badge">🔥 Bestseller</span>
 
-                        <video muted autoplay loop playsinline>
-                            <source src="{{ url_for('static', filename='images/' ~ p[4]) }}">
-                        </video>
+                <div class="media-box">
+                    <a href="/product/{{ p[0] }}">
 
-                    {% elif p[3] %} <!-- IMAGE COLUMN -->
+                        {% if media %}
+                            {% if '.mp4' in media %}
+                                <video autoplay muted loop>
+                                    <source src="{{ url_for('static', filename='images/' ~ media) }}">
+                                </video>
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/' ~ media) }}">
+                            {% endif %}
+                        {% else %}
+                            <img src="https://via.placeholder.com/300">
+                        {% endif %}
 
-                        <img src="{{ url_for('static', filename='images/' ~ p[3]) }}">
+                    </a>
+                </div>
 
-                    {% else %}
+                <div class="card-info">
+                    <h3 class="best-name">{{ p[1] }}</h3>
+                    <p class="best-price">₹{{ p[2] }}</p>
 
-                        <img src="{{ url_for('static', filename='images/default.jpg') }}">
+                    <a href="/add/{{ p[0] }}">
+                        <button class="cart-btn">Add to Cart</button>
+                    </a>
+                </div>
 
-                    {% endif %}
-
-                    <div class="overlay">
-                        <span>View Product</span>
-                    </div>
-
-                </a>
             </div>
-
-            <div class="card-info">
-                <h3>{{ p[1] }}</h3>
-                <p>₹{{ p[2] }}</p>
-
-                <a href="/add/{{ p[0] }}">
-                    <button>Add to Cart</button>
-                </a>
-            </div>
-
-        </div>
+            {% endif %}
         {% endfor %}
 
     </div>
 </section>
 
+<!-- 🔥 ALL PRODUCTS -->
+<section class="products" id="products">
+
+<h2 class="section-title">Our Collection</h2>
+
+<div class="grid">
+
+    {% for p in products %}
+    {% set media = p[4] if p[4] else p[3] %}
+
+    <div class="card">
+
+        <div class="media-box">
+            <a href="/product/{{ p[0] }}">
+
+                {% if media %}
+                    {% if '.mp4' in media %}
+                        <video autoplay muted loop>
+                            <source src="{{ url_for('static', filename='images/' ~ media) }}">
+                        </video>
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/' ~ media) }}">
+                    {% endif %}
+                {% else %}
+                    <img src="https://via.placeholder.com/300">
+                {% endif %}
+
+            </a>
+        </div>
+
+        <div class="card-info">
+            <h3 class="product-name">{{ p[1] }}</h3>
+            <p class="product-price">₹{{ p[2] }}</p>
+
+            <a href="/add/{{ p[0] }}">
+                <button class="cart-btn">Add to Cart</button>
+            </a>
+            
+        </div>
+            <a href="/wishlist_add/{{ p[0] }}">
+                <button style="background:pink;color:black;">❤️</button>
+            </a>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+</section>
+
+<!-- 🔥 INSTAGRAM -->
 <section class="insta">
-    <h2>Follow Us for More ✨</h2>
+    <h2>Follow Us ✨</h2>
     <p>
         <a href="https://instagram.com/official_jewelz_" target="_blank">
             @official_jewelz_

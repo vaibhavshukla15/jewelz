@@ -3,48 +3,80 @@
 
 <section class="admin-page">
 
-<h2>Admin Panel</h2>
+<h1 class="admin-title">👑 Admin Panel</h1>
 
-<form method="POST" class="admin-form">
+<div class="admin-top-btns">
 
-    <input name="name" placeholder="Product Name" required>
-    <input name="price" placeholder="Price" required>
+    <a href="/dashboard">
+        <button class="gold-btn">📊 Dashboard</button>
+    </a>
 
-    <!-- 🔥 IMAGE FIELD -->
-    <input name="image" placeholder="image.jpg">
+    <a href="/orders">
+        <button class="gold-btn">📦 Orders</button>
+    </a>
 
-    <!-- 🔥 VIDEO FIELD -->
-    <input name="file" placeholder="video.mp4">
+    <a href="/trash">
+        <button class="dark-btn">🗑 Trash</button>
+    </a>
 
-    <button>Add Product</button>
+    <a href="/logout">
+        <button class="red-btn">Logout</button>
+    </a>
+
+</div>
+
+<!-- Add Product -->
+<div class="form-box">
+
+<h2>Add New Product</h2>
+
+<form method="POST" enctype="multipart/form-data" class="admin-form">
+
+    <input type="text" name="name" placeholder="Product Name" required>
+
+    <input type="number" name="price" placeholder="Price" required>
+
+    <input type="file" name="file" required>
+
+    <button type="submit">➕ Add Product</button>
 
 </form>
 
+</div>
+
+<!-- Product List -->
 <div class="admin-list">
 
 {% for p in products %}
-<div class="admin-item">
+<div class="admin-card">
 
-    {% if p[3] %}
-        {% if '.mp4' in p[3] %}
-            <video class="admin-media" autoplay muted loop>
-                <source src="{{ url_for('static', filename='images/' + p[3]) }}">
-            </video>
-        {% else %}
-            <img class="admin-media" src="{{ url_for('static', filename='images/' + p[3]) }}">
-        {% endif %}
-    {% else %}
-        <img class="admin-media" src="{{ url_for('static', filename='images/default.jpg') }}">
+    {% set media = p[4] if p[4] else p[3] %}
+
+    {% if media %}
+        <img src="{{ url_for('static', filename='images/' ~ media) }}">
     {% endif %}
 
     <h3>{{ p[1] }}</h3>
     <p>₹{{ p[2] }}</p>
 
-    <a href="/edit/{{ p[0] }}"><button>Edit</button></a>
-    <a href="/delete/{{ p[0] }}"><button class="delete-btn">Delete</button></a>
+    <div class="card-btns">
+
+        <a href="/edit/{{ p[0] }}">
+            <button class="edit-btn">Edit</button>
+        </a>
+
+        <a href="/delete/{{ p[0] }}" onclick="return confirm('Delete product?')">
+            <button class="delete-btn">Delete</button>
+        </a>
+
+    </div>
 
 </div>
+
+
 {% endfor %}
+
+
 
 </div>
 

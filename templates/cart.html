@@ -2,21 +2,19 @@
 {% block content %}
 
 <section class="cart">
-
     <h2>Your Cart</h2>
 
     {% for item in items %}
     <div class="cart-box">
 
-        <!-- IMAGE / VIDEO -->
-        {% if item.file %}
-            {% if '.mp4' in item.file %}
-                <video class="cart-media" controls>
-                    <source src="{{ url_for('static', filename='images/' ~ item.file) }}">
-                </video>
-            {% else %}
-                <img class="cart-media" src="{{ url_for('static', filename='images/' ~ item.file) }}">
-            {% endif %}
+        {% set media = item.file if item.file else item.image %}
+
+        {% if media and '.mp4' in media %}
+            <video class="cart-media" controls>
+                <source src="{{ url_for('static', filename='images/' ~ media) }}">
+            </video>
+        {% elif media %}
+            <img class="cart-media" src="{{ url_for('static', filename='images/' ~ media) }}">
         {% else %}
             <img class="cart-media" src="{{ url_for('static', filename='images/default.jpg') }}">
         {% endif %}
@@ -25,18 +23,15 @@
             <h3>{{ item.name }}</h3>
             <p>₹{{ item.price }}</p>
 
-            <!-- 🔥 QUANTITY CONTROLS -->
             <div class="qty">
                 <a href="/dec/{{ item.id }}">-</a>
-                <span>{{ item.qty }}</span>
+                {{ item.qty }}
                 <a href="/inc/{{ item.id }}">+</a>
             </div>
 
             <p>Subtotal: ₹{{ item.subtotal }}</p>
 
-            <a href="/remove/{{ item.id }}">
-                <button>Remove</button>
-            </a>
+            <a href="/remove/{{ item.id }}">Remove</a>
         </div>
 
     </div>
@@ -45,7 +40,7 @@
     <h2>Total: ₹{{ total }}</h2>
 
     <a href="/checkout">
-        <button class="checkout-btn">Checkout</button>
+        <button>Checkout</button>
     </a>
 
 </section>

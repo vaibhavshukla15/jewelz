@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="dashboard">
+
+<h2>📊 Admin Analytics Dashboard</h2>
+
+<div class="stats">
+
+    <div class="card">
+        <h3>Total Products</h3>
+        <p>{{ total_products }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Orders</h3>
+        <p>{{ total_orders }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <p>₹{{ total_revenue }}</p>
+    </div>
+
+</div>
+
+<h3>🛒 Recent Orders</h3>
+
+<div class="orders">
+
+    {% for o in recent_orders %}
+        <div class="order-card">
+            <p><b>Order ID:</b> {{ o[0] }}</p>
+            <p>{{ o[1] }}</p>
+        </div>
+    {% endfor %}
+
+</div>
+
+</section>
+
+{% endblock %}
