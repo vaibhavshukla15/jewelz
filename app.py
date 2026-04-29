@@ -7,7 +7,7 @@ DB_PATH = "database.db"
 
 if os.environ.get("RENDER"):
     DB_PATH = "/tmp/database.db"
-    
+
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -22,6 +22,7 @@ def init_db():
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
+    # 🔥 PRODUCTS TABLE (always create)
     c.execute("""
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,17 +30,10 @@ def init_db():
             price INTEGER,
             image TEXT,
             file TEXT,
-            bestseller INTEGER DEFAULT 0
+            bestseller INTEGER DEFAULT 0,
+            deleted INTEGER DEFAULT 0
         )
     """)
-
-    conn.commit()
-
-    # old database me column nahi ho to add karo
-    columns = [col[1] for col in c.execute("PRAGMA table_info(products)")]
-
-    if "bestseller" not in columns:
-        c.execute("ALTER TABLE products ADD COLUMN bestseller INTEGER DEFAULT 0")
 
     conn.commit()
     conn.close()
@@ -536,20 +530,6 @@ def init_review_db():
 
 init_review_db()
 
-def fix_review_table():
-    conn = sqlite3.connect("database.db")
-    c = conn.cursor()
-
-    # check columns
-    columns = [col[1] for col in c.execute("PRAGMA table_info(reviews)")]
-
-    if "rating" not in columns:
-        c.execute("ALTER TABLE reviews ADD COLUMN rating INTEGER")
-
-    conn.commit()
-    conn.close()
-
-fix_review_table()
 
 
 # ❤️ ADD TO WISHLIST
