@@ -3,7 +3,11 @@ from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from urllib.parse import quote
+DB_PATH = "database.db"
 
+if os.environ.get("RENDER"):
+    DB_PATH = "/tmp/database.db"
+    
 app = Flask(__name__)
 app.secret_key = "secret123"
 
